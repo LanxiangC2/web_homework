@@ -2,26 +2,39 @@
   <div class="body">
     <div class="text-xs-center">
       <!-- 页头 -->
-      <div class="login_head">
+      <!-- <div class="login_head">
         <v-layout row wrap align-center >
-        <v-flex text-xs-left>
-          <img src="@/assets/chejianyuan.jpg" alt="" width="100">
-        </v-flex>
+          <v-flex text-xs-left>
+            <img src="@/assets/chejianyuan.jpg" alt="" width="100">
+          </v-flex>
 
-        <v-spacer></v-spacer>
+          <v-spacer></v-spacer>
 
-        <v-flex xs4 sm2 md2 lg2>
-          <p class="grey--text title ma-0">使用帮助</p>
-        </v-flex>
+          <v-flex xs4 sm2 md2 lg2>
+            <p class="grey--text title ma-0">使用帮助</p>
+          </v-flex>
 
-        <v-divider vertical class="my-4"></v-divider>
-        <v-flex xs4 sm2 md2 lg2>
-          <p class="grey--text title ma-0" >关于我们</p>
-        </v-flex>
-      </v-layout>
-      </div>
+          <v-divider vertical class="my-4"></v-divider>
+          <v-flex xs4 sm2 md2 lg2>
+            <p class="grey--text title ma-0" >关于我们</p>
+          </v-flex>
+        </v-layout>
+      </div> -->
       <!-- 主体部分 -->
       <div class="login_bg">
+        <div style="position: absolute; top: 16px; left: 16px">
+          <img src="@/assets/校徽.png" alt="" width="100">
+        </div>
+        <div style="position: absolute; top: 16px; right: 16px">
+          <ul>
+            <li>关于我们</li>
+            <li>使用帮助</li>
+          </ul>
+        </div>
+
+        <div class="login_title">
+            重庆大学论文推荐系统
+        </div>
         <!-- 提示框 -->
 
         <div v-if="receiveMessage" class="alert_div">
@@ -40,7 +53,7 @@
 
           <v-form ref="form" v-model="valid" lazy-validation class="" @submit.prevent="validateAndLogin">
             <v-layout justify-center align-center row>
-                <v-flex xs12 sm6 md4 lg3>
+                <v-flex xs12 sm6>
                   <v-text-field
                     v-model="username"
                     :counter="10"
@@ -53,7 +66,7 @@
             </v-layout>
 
             <v-layout justify-center align-center row>
-              <v-flex xs12 sm6 md4 lg3>
+              <v-flex xs12 sm6>
                 <v-text-field
                   type="password"
                   v-model="password"
@@ -64,14 +77,14 @@
               </v-flex>
             </v-layout>
             <!-- <v-layout justify-center align-center row>
-              <v-flex xs12 sm6 md4 lg3>
+              <v-flex xs12 sm6 md4>
                 <div>
                   <v-checkbox label="记住账号信息" v-model="rememberInfo" color="primary"></v-checkbox>
                 </div>
               </v-flex>
             </v-layout> -->
             <v-layout justify-center align-center row>
-              <v-flex xs12 sm6 md4 lg3>
+              <v-flex xs12 sm6>
                 <v-layout justify-space-around wrap>
                   <v-flex xs12>
                     <v-btn type="submit" block outline color="indigo" :disabled="loading">
@@ -164,7 +177,7 @@ export default {
           // this.$router.push({name: 'home'})
           this.$store.commit('login')
           console.log('nihao')
-        }, 3000)
+        }, 2000)
       } else {
         alert('请检查您的信息是否正确')
       }
@@ -204,7 +217,7 @@ export default {
     // 判断是否登录了
     login () {
       if (this.login === true) {
-        this.$router.push({name: 'home'})
+        this.$router.push({name: 'knowUser'})
       }
     }
   },
@@ -229,6 +242,22 @@ a:hover{
   background:blueviolet;
   color: #fff;
 }
+li{
+  float: left;
+  font-family: "myfontfamily2";
+  font-size: 24px;
+  list-style: none;
+  margin: 16px 16px
+}
+.login_title{
+  width: 100%;
+  height: 64px;
+  position: absolute;
+  top: 80px;
+  font-family: 'myfontfamily';
+  font-size: 64px;
+  color: white;
+}
 .login_head{
   /* height: 10vh; */
   overflow: hidden;
@@ -239,9 +268,9 @@ a:hover{
 } */
 .login_bg{
   position: relative;
-  height: 90vh;
+  height: 100vh;
   width: 100%;
-  background: url(../assets/chejianyuan2.jpg) ;
+  background: url(../assets/cquniversity.jpg) ;
   background-size: cover;
   text-align: contain
 }
@@ -253,23 +282,27 @@ a:hover{
 }
 .login_body {
   /* border-radius: 20px; */
-  height: 450px;
-  width: 100%;
+  height: 400px;
+  width: 40%;
   position: absolute;
   /* background: white; */
   top: 50%;
+  /* left: 50%; */
+  right: 10vh;
   margin-top: -200px;
+  /* border: 1px solid red; */
   /* margin-right: -20vh; */
   z-index: 9999
 }
 .layer{
-  /* border-radius: 20px; */
-  width: 100%;
-  height: 450px;
+  border-radius: 30px;
+  width: 40%;
+  height: 400px;
   background: white;
   position: absolute;
   top: 50%;
-  /* right: 50%; */
+  /* left: 50%; */
+  right: 10vh;
   margin-top: -200px;
   /* margin-right: -20vh; */
   opacity: 0.7;

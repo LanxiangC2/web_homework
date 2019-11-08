@@ -1,0 +1,12 @@
+@font-face{
+  font-family: "myfontfamily";
+  src: url("./禹卫书法行书.ttf");
+  font-weight: normal;
+  font-style: normal
+}
+@font-face{
+  font-family: "myfontfamily2";
+  src: url("./文悦古典明朝.otf");
+  font-weight: normal;
+  font-style: normal
+}

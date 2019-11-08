@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Home from '@/components/home'
 import Login from '@/components/login'
 import Register from '@/components/register'
+import KnowUser from '@/components/knowUser'
 
 Vue.use(Router)
 
@@ -22,6 +23,11 @@ export default new Router({
       path: '/home',
       name: 'home',
       component: Home
+    },
+    {
+      path: '/knowUser',
+      name: 'knowUser',
+      component: KnowUser
     }
   ]
 })

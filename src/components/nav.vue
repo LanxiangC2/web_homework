@@ -6,15 +6,15 @@
       <v-icon>home</v-icon>
     </v-btn>
 
-    <v-toolbar-title class="white--text">C-V2X车路协同通信场景测试系统</v-toolbar-title>
+    <v-toolbar-title class="white--text" style="font-family: 'myfontfamily'; font-size: 30px">重庆大学论文推荐系统</v-toolbar-title>
 
     <v-spacer></v-spacer>
       <!-- <p>欢迎您！</p>
       <p>管理员</p> -->
     <v-btn icon>欢迎您！</v-btn>
-    <v-btn icon>管理员</v-btn>
+    <v-btn icon><span style="font-family: 'myfontfamily'">{{ user }}</span></v-btn>
     <v-avatar size="36">
-      <img src="../assets/westbrook.jpg" alt="">
+      <img src="../assets/timg.jpg" alt="">
     </v-avatar>
 
     <v-btn icon @click="logout">注销</v-btn>
@@ -67,6 +67,9 @@ export default {
   computed: {
     login () {
       return this.$store.getters.login
+    },
+    user () {
+      return this.$store.getters.user
     }
   }
 }
