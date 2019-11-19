@@ -1,7 +1,11 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import axios from 'axios'
 
 Vue.use(Vuex)
+
+axios.defaults.baseURL = 'http://paperapi.cquzxy.top/'
+axios.defaults.headers.common['Authorization'] = 'JWT ' + sessionStorage.getItem('access')
 
 export default new Vuex.Store({
   state: {
@@ -9,13 +13,11 @@ export default new Vuex.Store({
     xiha: '无语',
     login: true,
     user: '罗小黑',
-    articles_data: [
-      {id: 0, subtitle: '罗小黑，无限，2019/3/27', title: '车联网C-V2X技术原理及测试解决方案', data: '...'},
-      {id: 1, subtitle: '罗小黑，无限，2019/3/27', title: '创新引领未来，华为联合伙伴打造C-V2X智慧出行新场景', data: '...'},
-      {id: 2, subtitle: '罗小黑，无限，2019/3/27', title: '中兴、北邮共建许昌芙蓉湖项目入围IMT-2020首批MEC与C-V2X融合测试床', data: '...'},
-      {id: 3, subtitle: '罗小黑，无限，2019/3/27', title: 'C-V2X技术在智能网联汽车上的应用场景研究', data: '...'},
-      {id: 4, subtitle: '罗小黑，无限，2019/3/27', title: '一种用于自动驾驶汽车的5G C-V2X车路云协同感知方法及系统', data: '...'}
-    ],
+    // token
+    // 用户验证token
+    token: null,
+    articles_data: [],
+    paper: [],
     userRequirements: []
   },
   getters: {
@@ -25,8 +27,14 @@ export default new Vuex.Store({
     user (state) {
       return state.user
     },
-    articles_data (state) {
-      return state.articles_data
+    articles_quote (state) {
+      return state.articles_data.sort((a, b) => a['quote'] > b['quote'] ? -1 : 1)
+    },
+    articles_time (state) {
+      return state.articles_data.slice().sort((a, b) => a['publish_time'] > b['publish_time'] ? -1 : 1)
+    },
+    articles_good (state) {
+      return state.articles_data.slice().sort((a, b) => a['paper_temperature'] > b['paper_temperature'] ? -1 : 1)
     },
     userRequirements (state) {
       return state.userRequirements
@@ -42,11 +50,43 @@ export default new Vuex.Store({
     },
     noteUserInfos (state, ob) {
       state.userRequirements = ob
+    },
+    // 用户验证token
+    retrieveToken (state, token) {
+      state.token = token
+    },
+    retrieveData (state, data) {
+      state.articles_data = data
+    },
+    retrievePaper (state, paper) {
+      state.paper = paper
     }
   },
   actions: {
     logout (context) {
       context.commit('logout')
+    },
+    // 开始做任务的验证,token获取
+    retrieveToken (context, ob) {
+      axios.post('/login/', ob)
+        .then(response => {
+          sessionStorage.setItem('access', response.data.token)
+          // console.log(response.data.token)
+          // 设置axios发送http请求的头信息
+          context.commit('retrieveToken', response.data.token)
+          axios.defaults.headers.common['Authorization'] = 'JWT ' + sessionStorage.getItem('access')
+          context.commit('login')
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    },
+    // 获取数据
+    retrieveData (context, data) {
+      context.commit('retrieveData', data)
+    },
+    retrievePaper (context, data) {
+      context.commit('retrievePaper', data)
     }
   }
 })

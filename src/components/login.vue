@@ -153,31 +153,31 @@ export default {
   methods: {
     validateAndLogin () {
       if (this.$refs.form.validate()) {
-        // this.loading = true
-        // this.$store.dispatch('retrieveToken', {
-        //   username: this.username,
-        //   // email: this.email,
-        //   password: this.password
-        // })
-        //   .then(response => {
-        //     this.timer = setTimeout(() => {
-        //       // this.$store.commit('login')
-        //       this.loading = false
-        //     }, 1000)
-        //   })
-        //   .catch(error => {
-        //     console.log(error)
-        //     this.loading = false
-        //     this.password = ''
-        //   })
-        // clearTimeout(this.timer)
-        // 没和后端链条
         this.loading = true
-        this.timer = setTimeout(() => {
-          // this.$router.push({name: 'home'})
-          this.$store.commit('login')
-          console.log('nihao')
-        }, 2000)
+        this.$store.dispatch('retrieveToken', {
+          username: this.username,
+          // email: this.email,
+          password: this.password
+        })
+          .then(response => {
+            this.timer = setTimeout(() => {
+              // this.$store.commit('login')
+              this.loading = false
+            }, 1000)
+          })
+          .catch(error => {
+            console.log(error)
+            this.loading = false
+            this.password = ''
+          })
+        clearTimeout(this.timer)
+        // 没和后端联调
+        // this.loading = true
+        // this.timer = setTimeout(() => {
+        //   // this.$router.push({name: 'home'})
+        //   this.$store.commit('login')
+        //   console.log('nihao')
+        // }, 2000)
       } else {
         alert('请检查您的信息是否正确')
       }
