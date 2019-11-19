@@ -4,6 +4,10 @@ import Home from '@/components/home'
 import Login from '@/components/login'
 import Register from '@/components/register'
 import KnowUser from '@/components/knowUser'
+import HeatMap from '@/components/map'
+import Articles from '@/components/articles'
+import Paper from '@/components/paper'
+import Lab from '@/components/lab'
 
 Vue.use(Router)
 
@@ -28,6 +32,26 @@ export default new Router({
       path: '/knowUser',
       name: 'knowUser',
       component: KnowUser
+    },
+    {
+      path: '/articles',
+      name: 'articles',
+      component: Articles
+    },
+    {
+      path: '/heatMap',
+      name: 'heatMap',
+      component: HeatMap
+    },
+    {
+      path: '/lab',
+      name: 'lab',
+      component: Lab
+    },
+    {
+      path: '/paper',
+      name: 'paper',
+      component: Paper
     }
   ]
 })
