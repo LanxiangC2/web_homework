@@ -7,7 +7,7 @@
   </v-container>
 </template>
 <script>
-import china from '../../static/china'
+// import china from '../../static/china'
 export default {
   data () {
     return {

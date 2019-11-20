@@ -6,7 +6,18 @@
     <!-- layer遮罩层2 -->
     <div class="layer2">
     </div>
-
+    <div v-if="loading === true" class="layer3">
+    </div>
+    <div class="progress" v-if="loading === true">
+      <v-progress-circular
+        :size="70"
+        :width="7"
+        color="white"
+        indeterminate
+        class="mt-10"
+      ></v-progress-circular>
+      <div class="mt-3 white--text">加载中 ......</div>
+    </div>
     <!-- <div class="pageHead"> -->
     <v-container grid-list-md>
       <v-layout>
@@ -17,6 +28,8 @@
           <v-text-field
             append-icon="search"
             solo
+            v-model="keywords"
+            @keyup.enter="search()"
           ></v-text-field>
         </v-flex>
       </v-layout>
@@ -29,11 +42,11 @@
             <h2>论文引用榜</h2>
             <v-list>
               <template v-for="(article_data, index) in articles_quote" >
-                <v-list-tile :key="article_data.paper_id" v-if="index < 10">
+                <v-list-tile :key="article_data.paper_id" v-if="index < 10" style="border-bottom: 1px solid #e0e0e0">
                     <!-- <v-list-tile-avatar>
                       <v-icon>favorite_border</v-icon>
                     </v-list-tile-avatar> -->
-                    <v-list-tile-content @click="enterDownload(article_data)">
+                    <v-list-tile-content @click="enterDownload(article_data)" >
                       <v-list-tile-title>{{index+1}}.{{ article_data.paper_name }}</v-list-tile-title>
                       <v-list-tile-sub-title>引用次数：{{ article_data.quote }}</v-list-tile-sub-title>
                     </v-list-tile-content>
@@ -43,7 +56,7 @@
                       </v-btn>
                     </v-list-tile-action> -->
                 </v-list-tile>
-                <v-divider avatar :key="index" v-if="index < 10"></v-divider>
+                <!-- <v-divider avatar :key="index" v-if="index < 10"></v-divider> -->
               </template>
             </v-list>
             <div @click="openDialog1()">......</div>
@@ -57,11 +70,11 @@
             <h2>精彩论文抢先看</h2>
             <v-list>
               <template v-for="(article_data, index) in articles_time" >
-                <v-list-tile :key="article_data.paper_id" v-if="index < 10">
+                <v-list-tile :key="article_data.paper_id" v-if="index < 10" style="border-bottom: 1px solid #e0e0e0">
                     <!-- <v-list-tile-avatar>
                       <v-icon>favorite_border</v-icon>
                     </v-list-tile-avatar> -->
-                    <v-list-tile-content @click="enterDownload(article_data)">
+                    <v-list-tile-content @click="enterDownload(article_data)" >
                       <v-list-tile-title>{{index+1}}.{{ article_data.paper_name }}</v-list-tile-title>
                       <v-list-tile-sub-title>发布时间：{{ article_data.publish_time }}</v-list-tile-sub-title>
                     </v-list-tile-content>
@@ -71,7 +84,7 @@
                       </v-btn>
                     </v-list-tile-action> -->
                 </v-list-tile>
-                <v-divider avatar v-if="index < 10" :key="index"></v-divider>
+                <!-- <v-divider avatar v-if="index < 10" :key="index"></v-divider> -->
               </template>
             </v-list>
             <div @click="openDialog2()">......</div>
@@ -82,11 +95,11 @@
             <h2>论文热搜榜</h2>
             <v-list>
               <template v-for="(article_data, index) in articles_good" >
-                <v-list-tile :key="article_data.paper_id" v-if="index < 10">
+                <v-list-tile :key="article_data.paper_id" v-if="index < 10" style="border-bottom: 1px solid #e0e0e0">
                     <!-- <v-list-tile-avatar>
                       <v-icon>favorite_border</v-icon>
                     </v-list-tile-avatar> -->
-                    <v-list-tile-content @click="enterDownload(article_data)">
+                    <v-list-tile-content @click="enterDownload(article_data)"  >
                       <v-list-tile-title>{{index+1}}.{{ article_data.paper_name }}</v-list-tile-title>
                       <v-list-tile-sub-title>搜索热力度：{{ article_data.paper_temperature }}</v-list-tile-sub-title>
                     </v-list-tile-content>
@@ -96,7 +109,7 @@
                       </v-btn>
                     </v-list-tile-action> -->
                 </v-list-tile>
-                <v-divider avatar v-if="index < 10" :key="index"></v-divider>
+                <!-- <v-divider avatar v-if="index < 10" :key="index"></v-divider> -->
               </template>
             </v-list>
             <div @click="openDialog3()">......</div>
@@ -108,13 +121,14 @@
     <v-container grid-list-lg>
       <v-layout align-center justify-center fill-height>
         <v-flex xs6>
-          <v-card dark class="secondary" style="text-align: left">
-            <v-layout wrap>
-              <v-flex xs12><h2 style="text-align: center">您的需求方向信息</h2></v-flex>
-              <v-flex xs12><h3 class="ml-3">专业类别：{{subject}}</h3></v-flex>
+          <v-card dark class="secondary" style="text-align: left; height: 200px">
+            <v-layout wrap align-center fill-height>
+              <v-flex xs12><h2 style="text-align: center">您的方向信息</h2></v-flex>
+              <v-flex xs12><h1 style="text-align: center; font-family: 'myfontfamily2">{{keywords}}</h1></v-flex>
+              <!-- <v-flex xs12><h3 class="ml-3">专业类别：{{subject}}</h3></v-flex>
               <v-flex xs12><h3 class="ml-3">期刊级别：{{data_type}}</h3></v-flex>
               <v-flex xs12><h3 class="ml-3">关键词类型：{{key_type}}</h3></v-flex>
-              <v-flex xs12><h3 class="ml-3">关键词：{{key_words}}</h3></v-flex>
+              <v-flex xs12><h3 class="ml-3">关键词：{{key_words}}</h3></v-flex> -->
             </v-layout>
             <!-- <div style="height: 200px;width: 100%; vertical-align:middle; display: table-cell">
               <h2 class="ml-3">您选的方向信息</h2>
@@ -220,15 +234,18 @@ export default {
       msg: 'Welcome to Your Vue.js App',
       items: ['主题', '摘要', '单位', '作者', '篇名', '被引文献', '栏目信息'],
       searchkey: '主题',
+      keywords: '',
       lists: [],
       dialog: false,
       dialog_title: '',
       dialog_type: 1,
-      currentPage: 1
+      currentPage: 1,
+      loading: false
     }
   },
   created () {
     // console.log(this.requirements.data_type)
+    this.keywords = sessionStorage.getItem('direction')
     axios.get('/paper/')
       .then(res => {
         this.$store.dispatch('retrieveData', res.data)
@@ -272,6 +289,27 @@ export default {
       this.lists = this.articles_good
       this.dialog_title = '论文热搜榜'
       this.dialog = true
+    },
+    // 搜索功能
+    search () {
+      this.loading = true
+      if (this.searchkey === '主题') {
+        sessionStorage.setItem('direction', this.keywords)
+        axios.get('/paper/', {
+          params: {research_direction: this.keywords}
+        })
+          .then(res => {
+            this.$store.dispatch('retrieveData', res.data)
+            var timer = setTimeout(() => {
+              this.loading = false
+              clearTimeout(timer)
+            }, 2000)
+          })
+          .catch(error => {
+            console.log(error)
+          })
+        // console.log('nihao')
+      }
     }
   },
   computed: {
@@ -388,6 +426,25 @@ h2,h3{
   opacity: 0.7;
   position: absolute;
   top: 0px;
+}
+.layer3{
+  height: 100%;
+  width: 100%;
+  background: grey;
+  opacity: 0.9;
+  position: absolute;
+  top: 0px;
+  z-index: 888
+}
+.progress{
+  width: 100px;
+  height: 100px;
+  position: absolute;
+  top: 25%;
+  left: 50%;
+  margin-top: -50px;
+  margin-left: -50px;
+  z-index: 999
 }
 .bg{
   /* height: 100%; */

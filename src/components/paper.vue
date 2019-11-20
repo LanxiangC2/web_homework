@@ -107,25 +107,25 @@
     </v-layout>
     <v-divider color='white'></v-divider>
     <h2 style="font-family: 'myfontfamily2'; color: black; text-align: left"><span style="background: white">精彩评论</span></h2>
-    <v-layout wrap v-for="comment in comments" :key="comment.id">
-      <v-flex xs1 class="avatar">
+    <v-layout wrap v-for="(comment,index) in comments" :key="index">
+      <v-flex xs2 class="avatar">
         <v-avatar color="indigo" size="48px">
           <v-icon dark>account_circle</v-icon>
         </v-avatar>
         <div class="white--text" style="height: 24px;line-height: 24px;overflow: hidden; text-overflow: ellipsis">{{comment.name}}</div>
       </v-flex>
-      <v-flex xs11 class="comment">
-        <v-textarea solo :value='comment.message' rows='3'>
+      <v-flex xs10 class="comment">
+        <v-textarea solo :value='comment.message' rows='3' disabled>
         </v-textarea>
       </v-flex>
     </v-layout>
     <v-divider color='white'></v-divider>
     <v-layout wrap>
       <v-flex xs12>
-        <v-textarea rows='5' solo placeholder="请输入您的精彩评论" clearable></v-textarea>
+        <v-textarea rows='5' solo placeholder="请输入您的精彩评论" clearable v-model="mycomment"></v-textarea>
       </v-flex>
       <v-flex class="submit">
-        <v-btn>提交</v-btn>
+        <v-btn @click="submit()">提交</v-btn>
       </v-flex>
     </v-layout>
   </v-container>
@@ -140,6 +140,7 @@ export default {
       {id: 3, name: '媚者无疆', message: '学到了学到了'},
       {id: 4, name: '画江湖', message: '大佬大佬'}
     ],
+    mycomment: '',
     rating: 0
   }),
   computed: {
@@ -168,6 +169,12 @@ export default {
       })
   },
   mounted () {
+  },
+  methods: {
+    submit () {
+      this.comments.push({name: '罗小黑', message: this.mycomment})
+      this.mycomment = ''
+    }
   }
 }
 </script>
