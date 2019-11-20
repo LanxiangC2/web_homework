@@ -18,6 +18,7 @@ export default new Vuex.Store({
     token: null,
     articles_data: [],
     paper: [],
+    authorData: [],
     userRequirements: []
   },
   getters: {
@@ -35,6 +36,12 @@ export default new Vuex.Store({
     },
     articles_good (state) {
       return state.articles_data.slice().sort((a, b) => a['paper_temperature'] > b['paper_temperature'] ? -1 : 1)
+    },
+    paper (state) {
+      return state.paper
+    },
+    authorData (state) {
+      return state.authorData
     },
     userRequirements (state) {
       return state.userRequirements
@@ -60,6 +67,9 @@ export default new Vuex.Store({
     },
     retrievePaper (state, paper) {
       state.paper = paper
+    },
+    retrieveAuthor (state, authorData) {
+      state.authorData = authorData
     }
   },
   actions: {
@@ -87,6 +97,9 @@ export default new Vuex.Store({
     },
     retrievePaper (context, data) {
       context.commit('retrievePaper', data)
+    },
+    retrieveAuthor (context, data) {
+      context.commit('retrieveAuthor', data)
     }
   }
 })

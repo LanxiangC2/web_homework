@@ -46,7 +46,7 @@
                 <v-divider avatar :key="index" v-if="index < 10"></v-divider>
               </template>
             </v-list>
-            <div>......</div>
+            <div @click="openDialog1()">......</div>
             <!-- <v-layout row v-for="article_data in articles_data" :key="article_data.id">
               <v-flex>{{article_data.paper_id}}</v-flex>
             </v-layout> -->
@@ -74,7 +74,7 @@
                 <v-divider avatar v-if="index < 10" :key="index"></v-divider>
               </template>
             </v-list>
-            <div>......</div>
+            <div @click="openDialog2()">......</div>
           </v-card>
         </v-flex>
         <v-flex xs4>
@@ -99,7 +99,7 @@
                 <v-divider avatar v-if="index < 10" :key="index"></v-divider>
               </template>
             </v-list>
-            <div>......</div>
+            <div @click="openDialog3()">......</div>
           </v-card>
         </v-flex>
       </v-layout>
@@ -153,6 +153,61 @@
         </v-flex>
       </v-layout>
     </v-container>
+    <v-dialog
+      v-model="dialog"
+      width="80vh"
+      height="100vh"
+    >
+      <v-card>
+        <v-card-title
+          class="title grey lighten-2"
+          primary-title
+        >
+          {{dialog_title}}
+        </v-card-title>
+
+        <v-card-text>
+          <v-card>
+            <v-list>
+              <template v-for="(article_data, index) in lists.slice((currentPage - 1) * 15, currentPage * 15)">
+                <v-list-tile :key="article_data.paper_id">
+                    <!-- <v-list-tile-avatar>
+                      <v-icon>favorite_border</v-icon>
+                    </v-list-tile-avatar> -->
+                    <v-list-tile-content @click="enterDownload(article_data)" style="border-bottom: 0.5px solid #e0e0e0">
+                      <v-list-tile-title>{{index+1+15*(currentPage-1)}}.{{ article_data.paper_name }}</v-list-tile-title>
+                      <v-list-tile-sub-title v-if="dialog_type === 1">引用次数：{{ article_data.quote }}</v-list-tile-sub-title>
+                      <v-list-tile-sub-title v-if="dialog_type === 2">发表时间：{{ article_data.publish_time }}</v-list-tile-sub-title>
+                      <v-list-tile-sub-title v-if="dialog_type === 3">搜索热力度：{{ article_data.paper_temperature }}</v-list-tile-sub-title>
+                    </v-list-tile-content>
+                </v-list-tile>
+              </template>
+            </v-list>
+          </v-card>
+        </v-card-text>
+
+        <div class="text-xs-center" v-if="lists.length !== 0">
+          <v-pagination
+            v-model="currentPage"
+            :length="totalPages"
+            :total-visible="7"
+          ></v-pagination>
+        </div>
+
+        <v-divider></v-divider>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="primary"
+            flat
+            @click="dialog = false"
+          >
+            关闭
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -164,7 +219,12 @@ export default {
     return {
       msg: 'Welcome to Your Vue.js App',
       items: ['主题', '摘要', '单位', '作者', '篇名', '被引文献', '栏目信息'],
-      searchkey: '主题'
+      searchkey: '主题',
+      lists: [],
+      dialog: false,
+      dialog_title: '',
+      dialog_type: 1,
+      currentPage: 1
     }
   },
   created () {
@@ -187,13 +247,31 @@ export default {
     toLab () {
       this.$router.push({name: 'lab'})
     },
-    enterDownload (article_data) {
-      axios.get('/paper/' + article_data.paper_id + '/')
-        .then(res => {
-          this.$store.dispatch('retrievePaper', res.data)
-          // console.log(this.$store.state.paper)
-        })
-
+    enterDownload (article) {
+      sessionStorage.setItem('paper_id', article.paper_id)
+      sessionStorage.setItem('author_id', article.author)
+      this.$router.push({name: 'paper'})
+    },
+    openDialog1 () {
+      this.dialog_type = 1
+      this.currentPage = 1
+      this.lists = this.articles_quote
+      this.dialog_title = '论文引用榜'
+      this.dialog = true
+    },
+    openDialog2 () {
+      this.dialog_type = 2
+      this.currentPage = 1
+      this.lists = this.articles_time
+      this.dialog_title = '论文实时榜'
+      this.dialog = true
+    },
+    openDialog3 () {
+      this.dialog_type = 3
+      this.currentPage = 1
+      this.lists = this.articles_good
+      this.dialog_title = '论文热搜榜'
+      this.dialog = true
     }
   },
   computed: {
@@ -276,6 +354,13 @@ export default {
         return '未选择'
       } else {
         return this.requirements.key_words
+      }
+    },
+    totalPages () {
+      if (this.lists.length !== 0) {
+        return Math.ceil(this.lists.length / 15)
+      } else {
+        return 15
       }
     }
   }
